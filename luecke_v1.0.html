@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<!-- Kooperativer Lückentext – Version 1.0 – 25.11.2026 -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lückentext</title>
+<style>
+:root{--rolle:#1f5fbf;--rolle-hell:#e6eefb;--fehler:#c62828}
+body.rolle-B{--rolle:#2e7d32;--rolle-hell:#e7f4e8}
+body.rolle-solo,body.rolle-keine{--rolle:#5f6368;--rolle-hell:#eeeff1}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:19px;line-height:2;color:#1a1a1a;background:#fff}
+header{background:var(--rolle);color:#fff;padding:10px 16px}
+header .rolle{font-size:28px;font-weight:700;line-height:1.2}
+header h1{font-size:18px;font-weight:400;margin:2px 0 0;line-height:1.3}
+main{max-width:760px;margin:0 auto;padding:12px 16px}
+.hinweis{font-size:15px;color:#555;margin:0 0 10px;line-height:1.4}
+.text p{margin:0 0 14px}
+.luecke{display:inline-block;width:5.5em;min-height:1.7em;padding:0 8px;margin:2px 1px;border:2px dashed #888;border-radius:8px;background:#fafafa;vertical-align:middle;line-height:1.5;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.luecke.voll{width:auto;border-style:solid;border-color:var(--rolle);background:var(--rolle-hell);font-weight:600}
+.luecke.ziel{border-color:var(--rolle);background:var(--rolle-hell)}
+.luecke.falsch{border:3px solid var(--fehler);background:#fdecea}
+#leiste{position:fixed;left:0;right:0;bottom:0;background:var(--rolle-hell);border-top:4px solid var(--rolle);padding:8px 10px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -2px 8px rgba(0,0,0,.15);max-height:60vh;overflow-y:auto}
+#leiste .innen{max-width:760px;margin:0 auto}
+#woerter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.wort{font:inherit;font-size:18px;padding:8px 14px;border-radius:22px;border:2px solid var(--rolle);background:#fff;color:#1a1a1a;cursor:pointer;line-height:1.2;min-height:44px}
+.wort.gewaehlt{background:var(--rolle);color:#fff}
+.wort.benutzt{opacity:.35;border-style:dashed;cursor:default}
+.knoepfe{display:flex;gap:8px}
+.knoepfe button{flex:1;font:inherit;font-size:18px;font-weight:600;min-height:48px;border-radius:10px;cursor:pointer}
+#pruefen{background:var(--rolle);color:#fff;border:none}
+#pruefen:disabled{background:#bbb;color:#f2f2f2;cursor:default}
+#neu{background:#fff;color:#333;border:2px solid #999}
+#ergebnis{display:none;margin-bottom:8px;padding:8px 12px;border-radius:10px;font-size:17px;line-height:1.4}
+#ergebnis.fehler{display:block;background:#fdecea;color:var(--fehler);border:2px solid var(--fehler)}
+#ergebnis.ok{display:block;background:#fff;border:2px solid var(--rolle)}
+.loesung{display:block;font-size:30px;font-weight:700;letter-spacing:.15em;color:var(--rolle);margin:4px 0}
+.meldungen{color:var(--fehler);line-height:1.5}
+.auswahl a{display:block;margin:10px 0;padding:12px;border-radius:10px;color:#fff;text-decoration:none;font-weight:700;text-align:center}
+footer{font-size:12px;color:#888;text-align:center;padding:16px 0;line-height:1.4}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     IMPORTTEXT – AB HIER AUSTAUSCHEN
+     Nur den Text zwischen <script ...> und </script> ersetzen.
+     ================================================================ -->
+<script type="text/plain" id="importtext">
+Titel: Rechtsformen der Unternehmen
+Lösungswort: HAFTUNG
+Text:
+Bei der Gründung eines Unternehmens muss eine passende Rechtsform gewählt werden. Wer ein Unternehmen allein führt, ist [Einzelunternehmer] und haftet unbeschränkt mit dem gesamten Privatvermögen.
+
+Schließen sich mehrere Personen zusammen, entsteht eine Personengesellschaft. In der [OHG] haften alle Gesellschafter unbeschränkt, unmittelbar und gesamtschuldnerisch. In der KG gibt es dagegen zwei Arten von Gesellschaftern: Der [Komplementär] haftet unbeschränkt, der Kommanditist nur bis zur Höhe seiner Einlage.
+
+Kapitalgesellschaften sind juristische Personen. Die [GmbH] haftet nur mit ihrem Gesellschaftsvermögen. Für ihre Gründung ist ein [Stammkapital] von mindestens 25.000 Euro vorgeschrieben. Nach außen wird die Gesellschaft durch den [Geschäftsführer] vertreten. Die Regeln für das Zusammenleben der Gesellschafter stehen im [Gesellschaftsvertrag], der notariell beurkundet werden muss. Erst mit der Eintragung in das [Handelsregister] entsteht die GmbH als juristische Person.
+Füllwörter:
+Aktionär; Prokurist; Aufsichtsrat; Grundkapital; AG; Vorstand; Genossenschaftsregister; Kaufmann
+</script>
+<!-- ================================================================
+     IMPORTTEXT – ENDE
+     ================================================================ -->
+
+<header>
+  <div class="rolle" id="rollenname"></div>
+  <h1 id="titel"></h1>
+</header>
+<main id="inhalt"></main>
+<footer>Version 1.0 · 25.11.2026</footer>
+
+<div id="leiste" hidden>
+  <div class="innen">
+    <div id="ergebnis" aria-live="polite"></div>
+    <div id="woerter"></div>
+    <div class="knoepfe">
+      <button id="neu" type="button">Neu starten</button>
+      <button id="pruefen" type="button" disabled>Prüfen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var ANZAHL_LUECKEN = 8;
+var MIN_FUELLWOERTER = 4;
+
+function el(tag, klasse, text){
+  var e = document.createElement(tag);
+  if (klasse) e.className = klasse;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function norm(s){ return s.trim().replace(/\s+/g, " ").toLowerCase(); }
+function anfang(s){ s = s.replace(/\s+/g, " ").trim(); return s.length > 15 ? s.slice(0, 15) : s; }
+function ende(s){ s = s.replace(/\s+/g, " ").trim(); return s.length > 15 ? s.slice(-15) : s; }
+function mischen(a){
+  for (var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+/* ---------- Importtext lesen und prüfen ---------- */
+function lesen(roh){
+  var fehler = [];
+  var titel = null, loesungswort = null, textZeilen = null, fuellZeilen = null, modus = null;
+  roh.replace(/\r/g, "").split("\n").forEach(function(z){
+    var t = z.trim(), m;
+    if ((m = t.match(/^Titel:\s*(.*)$/i))){ titel = m[1].trim(); modus = null; return; }
+    if ((m = t.match(/^Lösungswort:\s*(.*)$/i))){ loesungswort = m[1].trim(); modus = null; return; }
+    if ((m = t.match(/^Text:\s*(.*)$/i))){ textZeilen = []; modus = "text"; if (m[1]) textZeilen.push(m[1]); return; }
+    if ((m = t.match(/^Füllwörter:\s*(.*)$/i))){ fuellZeilen = []; modus = "fuell"; if (m[1]) fuellZeilen.push(m[1]); return; }
+    if (modus === "text") textZeilen.push(z);
+    else if (modus === "fuell") fuellZeilen.push(z);
+  });
+
+  if (!titel) fehler.push("Titel fehlt.");
+  if (!loesungswort) fehler.push("Lösungswort fehlt.");
+  else if (loesungswort.replace(/\s/g, "").length < 4) fehler.push("Lösungswort „" + loesungswort + "“ ist zu kurz (mindestens 4 Buchstaben).");
+
+  var absaetze = [], luecken = [];
+  if (!textZeilen || !textZeilen.join("").trim()) fehler.push("Text fehlt.");
+  else {
+    textZeilen.join("\n").split(/\n\s*\n/).forEach(function(abs){
+      abs = abs.replace(/\s*\n\s*/g, " ").trim();
+      if (!abs) return;
+      var teile = [], puffer = "", i = 0;
+      while (i < abs.length){
+        var c = abs[i];
+        if (c === "["){
+          var zu = abs.indexOf("]", i + 1), auf = abs.indexOf("[", i + 1);
+          if (zu === -1 || (auf !== -1 && auf < zu)){
+            fehler.push("Klammer nach ‚" + anfang(abs.slice(i + 1)) + "…‘ nicht geschlossen.");
+            puffer += c; i++; continue;
+          }
+          var wort = abs.slice(i + 1, zu).replace(/\s+/g, " ").trim();
+          if (!wort) fehler.push("Leere Klammer [ ] nach ‚…" + ende(puffer) + "‘.");
+          else {
+            if (puffer) teile.push(puffer);
+            puffer = "";
+            teile.push({ luecke: luecken.length });
+            luecken.push(wort);
+          }
+          i = zu + 1; continue;
+        }
+        if (c === "]"){ fehler.push("Schließende Klammer ohne öffnende nach ‚…" + ende(puffer) + "‘."); i++; continue; }
+        puffer += c; i++;
+      }
+      if (puffer) teile.push(puffer);
+      absaetze.push(teile);
+    });
+    if (luecken.length < ANZAHL_LUECKEN) fehler.push("Nur " + luecken.length + " Lücken gefunden (erwartet: " + ANZAHL_LUECKEN + ").");
+    if (luecken.length > ANZAHL_LUECKEN) fehler.push(luecken.length + " Lücken gefunden (erwartet: " + ANZAHL_LUECKEN + ").");
+  }
+
+  var fuell = [];
+  if (!fuellZeilen) fehler.push("Füllwörter fehlen.");
+  else {
+    fuell = fuellZeilen.join(" ").split(";").map(function(w){ return w.replace(/\s+/g, " ").trim(); }).filter(Boolean);
+    if (fuell.length < MIN_FUELLWOERTER) fehler.push("Nur " + fuell.length + " Füllwörter gefunden (mindestens " + MIN_FUELLWOERTER + ", empfohlen 8).");
+  }
+
+  var gesehen = {};
+  luecken.forEach(function(w){
+    var k = norm(w);
+    if (gesehen[k] === "L") fehler.push("Lösungswort ‚" + w + "‘ kommt doppelt vor.");
+    gesehen[k] = "L";
+  });
+  fuell.forEach(function(w){
+    var k = norm(w);
+    if (gesehen[k] === "L") fehler.push("Füllwort ‚" + w + "‘ ist auch ein Lösungswort.");
+    else if (gesehen[k] === "F") fehler.push("Füllwort ‚" + w + "‘ kommt doppelt vor.");
+    else gesehen[k] = "F";
+  });
+
+  return { fehler: fehler, titel: titel, loesungswort: loesungswort, absaetze: absaetze, luecken: luecken, fuell: fuell };
+}
+
+/* ---------- Rolle aus der Adresse ---------- */
+var p = (new URLSearchParams(location.search).get("rolle") || "").trim().toLowerCase();
+var rolle = p === "a" ? "A" : p === "b" ? "B" : p === "solo" ? "solo" : null;
+
+var inhalt = document.getElementById("inhalt");
+var daten = lesen(document.getElementById("importtext").textContent);
+
+document.getElementById("titel").textContent = daten.titel || "";
+
+if (daten.fehler.length){
+  document.body.className = "rolle-keine";
+  document.getElementById("rollenname").textContent = "Fehler im Importtext";
+  inhalt.appendChild(el("p", null, "Das Spiel kann nicht starten. Bitte den Importtext korrigieren:"));
+  var ul = el("ul", "meldungen");
+  daten.fehler.forEach(function(f){ ul.appendChild(el("li", null, f)); });
+  inhalt.appendChild(ul);
+  return;
+}
+
+if (!rolle){
+  document.body.className = "rolle-keine";
+  document.getElementById("rollenname").textContent = "Rolle wählen";
+  inhalt.appendChild(el("p", null, "In der Adresse fehlt die Rolle (?rolle=A, ?rolle=B oder ?rolle=solo)."));
+  var box = el("div", "auswahl");
+  [["A", "Rolle A", "#1f5fbf"], ["B", "Rolle B", "#2e7d32"], ["solo", "Übung (allein)", "#5f6368"]].forEach(function(r){
+    var a = el("a", null, r[1]); a.href = "?rolle=" + r[0]; a.style.background = r[2]; box.appendChild(a);
+  });
+  inhalt.appendChild(box);
+  return;
+}
+
+/* ---------- Spiel aufbauen ---------- */
+document.body.className = "rolle-" + rolle;
+document.getElementById("rollenname").textContent = rolle === "solo" ? "Übung" : "Rolle " + rolle;
+
+var luecken = daten.luecken.map(function(w, i){ return { loesung: w, besitzer: i % 2 === 0 ? "A" : "B" }; });
+var woerter = [];
+if (rolle === "solo"){
+  woerter = daten.luecken.concat(daten.fuell);
+} else {
+  luecken.forEach(function(l){ if (l.besitzer === rolle) woerter.push(l.loesung); });
+  var start = rolle === "A" ? 0 : 1;
+  for (var f = start, n = 0; f < daten.fuell.length && n < 2; f += 2, n++) woerter.push(daten.fuell[f]);
+}
+var eigene = luecken.filter(function(l){ return rolle === "solo" || l.besitzer === rolle; }).length;
+
+var belegung, gewaehlt, reihenfolge, falsch;
+function zuruecksetzen(){
+  belegung = luecken.map(function(){ return null; });
+  gewaehlt = null;
+  falsch = {};
+  reihenfolge = mischen(woerter.map(function(_, i){ return i; }));
+  ergebnisZeigen(null);
+}
+
+inhalt.appendChild(el("p", "hinweis", "Wort unten antippen, dann eine Lücke antippen. Eine befüllte Lücke antippen gibt das Wort wieder frei."));
+var textBox = el("div", "text");
+var lueckenEl = [];
+daten.absaetze.forEach(function(teile){
+  var pEl = el("p");
+  teile.forEach(function(t){
+    if (typeof t === "string"){ pEl.appendChild(document.createTextNode(t)); return; }
+    var s = el("span", "luecke");
+    s.setAttribute("role", "button");
+    s.tabIndex = 0;
+    s.dataset.i = t.luecke;
+    lueckenEl[t.luecke] = s;
+    pEl.appendChild(s);
+  });
+  textBox.appendChild(pEl);
+});
+inhalt.appendChild(textBox);
+
+var leiste = document.getElementById("leiste");
+var woerterEl = document.getElementById("woerter");
+var pruefenBtn = document.getElementById("pruefen");
+var neuBtn = document.getElementById("neu");
+var ergebnisEl = document.getElementById("ergebnis");
+leiste.hidden = false;
+
+function ergebnisZeigen(art, teile){
+  ergebnisEl.className = art || "";
+  ergebnisEl.textContent = "";
+  if (teile) teile.forEach(function(t){ ergebnisEl.appendChild(t); });
+}
+
+function benutzt(w){ return belegung.indexOf(w) !== -1; }
+
+function zeichnen(){
+  lueckenEl.forEach(function(s, i){
+    var w = belegung[i];
+    s.textContent = w === null ? " " : woerter[w];
+    s.classList.toggle("voll", w !== null);
+    s.classList.toggle("ziel", w === null && gewaehlt !== null);
+    s.classList.toggle("falsch", !!falsch[i]);
+    s.setAttribute("aria-label", w === null ? "Lücke " + (i + 1) + ", leer" : "Lücke " + (i + 1) + ": " + woerter[w]);
+  });
+  woerterEl.textContent = "";
+  reihenfolge.forEach(function(w){
+    var b = el("button", "wort", woerter[w]);
+    b.type = "button";
+    if (benutzt(w)){ b.classList.add("benutzt"); b.disabled = true; }
+    else if (gewaehlt === w) b.classList.add("gewaehlt");
+    b.addEventListener("click", function(){
+      gewaehlt = gewaehlt === w ? null : w;
+      zeichnen();
+    });
+    woerterEl.appendChild(b);
+  });
+  var gefuellt = belegung.filter(function(w){ return w !== null; }).length;
+  pruefenBtn.disabled = gefuellt < eigene;
+  abstand();
+}
+
+function lueckeAntippen(i){
+  if (gewaehlt !== null){ belegung[i] = gewaehlt; gewaehlt = null; }
+  else if (belegung[i] !== null){ belegung[i] = null; }
+  else return;
+  delete falsch[i];
+  if (ergebnisEl.className === "ok") ergebnisZeigen(null);
+  zeichnen();
+}
+lueckenEl.forEach(function(s, i){
+  s.addEventListener("click", function(){ lueckeAntippen(i); });
+  s.addEventListener("keydown", function(e){
+    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); lueckeAntippen(i); }
+  });
+});
+
+function teilDesLoesungsworts(){
+  var w = daten.loesungswort, h = Math.ceil(w.length / 2);
+  return rolle === "A" ? w.slice(0, h) : w.slice(h);
+}
+
+pruefenBtn.addEventListener("click", function(){
+  falsch = {};
+  var anzahl = 0;
+  luecken.forEach(function(l, i){
+    var w = belegung[i];
+    var eigen = rolle === "solo" || l.besitzer === rolle;
+    var fehlerHier = eigen ? (w === null || norm(woerter[w]) !== norm(l.loesung)) : w !== null;
+    if (fehlerHier){ falsch[i] = true; anzahl++; }
+  });
+  gewaehlt = null;
+  if (anzahl){
+    ergebnisZeigen("fehler", [document.createTextNode(
+      (anzahl === 1 ? "1 Fehler" : anzahl + " Fehler") + " – die rot markierten Lücken stimmen nicht. Korrigieren und erneut prüfen.")]);
+  } else if (rolle === "solo"){
+    ergebnisZeigen("ok", [document.createTextNode("Alles richtig! Lösungswort:"), el("span", "loesung", daten.loesungswort)]);
+  } else {
+    ergebnisZeigen("ok", [
+      document.createTextNode("Alles richtig! Dein Teil des Lösungsworts (" + (rolle === "A" ? "Anfang" : "Ende") + "):"),
+      el("span", "loesung", teilDesLoesungsworts()),
+      document.createTextNode("Setzt das Lösungswort mit eurem Partner zusammen.")
+    ]);
+  }
+  zeichnen();
+});
+
+var neuTimer = null;
+neuBtn.addEventListener("click", function(){
+  if (!neuTimer){
+    neuBtn.textContent = "Wirklich neu starten?";
+    neuTimer = setTimeout(function(){ neuBtn.textContent = "Neu starten"; neuTimer = null; }, 3000);
+    return;
+  }
+  clearTimeout(neuTimer); neuTimer = null;
+  neuBtn.textContent = "Neu starten";
+  zuruecksetzen();
+  zeichnen();
+  window.scrollTo(0, 0);
+});
+
+function abstand(){ document.body.style.paddingBottom = (leiste.offsetHeight + 16) + "px"; }
+window.addEventListener("resize", abstand);
+
+zuruecksetzen();
+zeichnen();
+})();
+</script>
+</body>
+</html>
