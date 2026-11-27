@@ -6,6 +6,9 @@
 - Kopfzeile kleiner: Rolle und Titel in einer Zeile, kleinere Schrift, weniger Innenabstand.
 - Bedienhinweis vom Seitenanfang unter den Text verschoben (über der Versionsangabe), kleiner und grau.
 
+### Getestet
+- 27.11.2026: alle Tests laut Testplan Version 1 auf echten Geräten erfolgreich. Version 1 abgeschlossen.
+
 ## Version 1.1 – 27.11.2026
 
 ### Neu
@@ -32,5 +35,3 @@
 ### Geändert
 - Datei heißt im Repository `index.html` statt `luecke_v1.0.html`; online unter https://henningschmidt1.github.io/lueckentext/?rolle=A (bzw. `B`, `solo`).
 
-### Offen
-- Test auf echten Geräten (zwei Handys per QR-Code, Safari und Chrome, PC mit Maus) steht aus.
