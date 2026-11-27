@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kooperativer Lückentext – Version 1.1 – 27.11.2026 -->
+<!-- Kooperativer Lückentext – Version 1.2 – 27.11.2026 -->
 <html lang="de">
 <head>
 <meta charset="utf-8">
@@ -12,11 +12,11 @@ body.rolle-solo,body.rolle-keine{--rolle:#5f6368;--rolle-hell:#eeeff1}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:19px;line-height:2;color:#1a1a1a;background:#fff}
-header{background:var(--rolle);color:#fff;padding:10px 16px}
-header .rolle{font-size:28px;font-weight:700;line-height:1.2}
-header h1{font-size:18px;font-weight:400;margin:2px 0 0;line-height:1.3}
+header{background:var(--rolle);color:#fff;padding:5px 16px;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:12px}
+header .rolle{font-size:20px;font-weight:700;line-height:1.3}
+header h1{font-size:15px;font-weight:400;margin:0;line-height:1.3}
 main{max-width:760px;margin:0 auto;padding:12px 16px}
-.hinweis{font-size:15px;color:#555;margin:0 0 10px;line-height:1.4}
+.hinweis{font-size:14px;color:#777;margin:8px 0 0;line-height:1.4;text-align:center}
 .text p{margin:0 0 14px}
 .luecke{display:inline-block;width:5.5em;min-height:1.7em;padding:0 8px;margin:2px 1px;border:2px dashed #888;border-radius:8px;background:#fafafa;vertical-align:middle;line-height:1.5;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .luecke.voll{width:auto;border-style:solid;border-color:var(--rolle);background:var(--rolle-hell);font-weight:600}
@@ -70,7 +70,7 @@ Aktionär; Prokurist; Aufsichtsrat; Grundkapital; AG; Vorstand; Genossenschaftsr
   <h1 id="titel"></h1>
 </header>
 <main id="inhalt"></main>
-<footer>Version 1.1 · 27.11.2026</footer>
+<footer>Version 1.2 · 27.11.2026</footer>
 
 <div id="leiste" hidden>
   <div class="innen">
@@ -237,7 +237,6 @@ function zuruecksetzen(){
   ergebnisZeigen(null);
 }
 
-inhalt.appendChild(el("p", "hinweis", "Wort und Lücke antippen – in beliebiger Reihenfolge. Eine befüllte Lücke antippen gibt das Wort wieder frei."));
 var textBox = el("div", "text");
 var lueckenEl = [];
 daten.absaetze.forEach(function(teile){
@@ -254,6 +253,7 @@ daten.absaetze.forEach(function(teile){
   textBox.appendChild(pEl);
 });
 inhalt.appendChild(textBox);
+inhalt.appendChild(el("p", "hinweis", "Wort und Lücke antippen – in beliebiger Reihenfolge. Eine befüllte Lücke antippen gibt das Wort wieder frei."));
 
 var leiste = document.getElementById("leiste");
 var woerterEl = document.getElementById("woerter");

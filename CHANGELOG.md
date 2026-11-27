@@ -1,5 +1,11 @@
 # Changelog – Kooperativer Lückentext
 
+## Version 1.2 – 27.11.2026
+
+### Geändert
+- Kopfzeile kleiner: Rolle und Titel in einer Zeile, kleinere Schrift, weniger Innenabstand.
+- Bedienhinweis vom Seitenanfang unter den Text verschoben (über der Versionsangabe), kleiner und grau.
+
 ## Version 1.1 – 27.11.2026
 
 ### Neu
