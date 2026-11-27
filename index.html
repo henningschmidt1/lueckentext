@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kooperativer Lückentext – Version 1.0 – 25.11.2026 -->
+<!-- Kooperativer Lückentext – Version 1.1 – 27.11.2026 -->
 <html lang="de">
 <head>
 <meta charset="utf-8">
@@ -22,6 +22,7 @@ main{max-width:760px;margin:0 auto;padding:12px 16px}
 .luecke.voll{width:auto;border-style:solid;border-color:var(--rolle);background:var(--rolle-hell);font-weight:600}
 .luecke.ziel{border-color:var(--rolle);background:var(--rolle-hell)}
 .luecke.falsch{border:3px solid var(--fehler);background:#fdecea}
+.luecke.auswahl{border:3px solid var(--rolle);background:var(--rolle-hell);box-shadow:0 0 0 3px rgba(0,0,0,.18)}
 #leiste{position:fixed;left:0;right:0;bottom:0;background:var(--rolle-hell);border-top:4px solid var(--rolle);padding:8px 10px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -2px 8px rgba(0,0,0,.15);max-height:60vh;overflow-y:auto}
 #leiste .innen{max-width:760px;margin:0 auto}
 #woerter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
@@ -69,7 +70,7 @@ Aktionär; Prokurist; Aufsichtsrat; Grundkapital; AG; Vorstand; Genossenschaftsr
   <h1 id="titel"></h1>
 </header>
 <main id="inhalt"></main>
-<footer>Version 1.0 · 25.11.2026</footer>
+<footer>Version 1.1 · 27.11.2026</footer>
 
 <div id="leiste" hidden>
   <div class="innen">
@@ -226,16 +227,17 @@ if (rolle === "solo"){
 }
 var eigene = luecken.filter(function(l){ return rolle === "solo" || l.besitzer === rolle; }).length;
 
-var belegung, gewaehlt, reihenfolge, falsch;
+var belegung, gewaehlt, gewaehlteLuecke, reihenfolge, falsch;
 function zuruecksetzen(){
   belegung = luecken.map(function(){ return null; });
   gewaehlt = null;
+  gewaehlteLuecke = null;
   falsch = {};
   reihenfolge = mischen(woerter.map(function(_, i){ return i; }));
   ergebnisZeigen(null);
 }
 
-inhalt.appendChild(el("p", "hinweis", "Wort unten antippen, dann eine Lücke antippen. Eine befüllte Lücke antippen gibt das Wort wieder frei."));
+inhalt.appendChild(el("p", "hinweis", "Wort und Lücke antippen – in beliebiger Reihenfolge. Eine befüllte Lücke antippen gibt das Wort wieder frei."));
 var textBox = el("div", "text");
 var lueckenEl = [];
 daten.absaetze.forEach(function(teile){
@@ -275,6 +277,7 @@ function zeichnen(){
     s.classList.toggle("voll", w !== null);
     s.classList.toggle("ziel", w === null && gewaehlt !== null);
     s.classList.toggle("falsch", !!falsch[i]);
+    s.classList.toggle("auswahl", gewaehlteLuecke === i);
     s.setAttribute("aria-label", w === null ? "Lücke " + (i + 1) + ", leer" : "Lücke " + (i + 1) + ": " + woerter[w]);
   });
   woerterEl.textContent = "";
@@ -284,6 +287,11 @@ function zeichnen(){
     if (benutzt(w)){ b.classList.add("benutzt"); b.disabled = true; }
     else if (gewaehlt === w) b.classList.add("gewaehlt");
     b.addEventListener("click", function(){
+      if (gewaehlteLuecke !== null){
+        gewaehlt = w;
+        lueckeAntippen(gewaehlteLuecke);
+        return;
+      }
       gewaehlt = gewaehlt === w ? null : w;
       zeichnen();
     });
@@ -295,9 +303,9 @@ function zeichnen(){
 }
 
 function lueckeAntippen(i){
-  if (gewaehlt !== null){ belegung[i] = gewaehlt; gewaehlt = null; }
-  else if (belegung[i] !== null){ belegung[i] = null; }
-  else return;
+  if (gewaehlt !== null){ belegung[i] = gewaehlt; gewaehlt = null; gewaehlteLuecke = null; }
+  else if (belegung[i] !== null){ belegung[i] = null; gewaehlteLuecke = null; }
+  else { gewaehlteLuecke = gewaehlteLuecke === i ? null : i; zeichnen(); return; }
   delete falsch[i];
   if (ergebnisEl.className === "ok") ergebnisZeigen(null);
   zeichnen();
@@ -324,6 +332,7 @@ pruefenBtn.addEventListener("click", function(){
     if (fehlerHier){ falsch[i] = true; anzahl++; }
   });
   gewaehlt = null;
+  gewaehlteLuecke = null;
   if (anzahl){
     ergebnisZeigen("fehler", [document.createTextNode(
       (anzahl === 1 ? "1 Fehler" : anzahl + " Fehler") + " – die rot markierten Lücken stimmen nicht. Korrigieren und erneut prüfen.")]);

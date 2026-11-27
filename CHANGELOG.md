@@ -1,5 +1,13 @@
 # Changelog – Kooperativer Lückentext
 
+## Version 1.1 – 27.11.2026
+
+### Neu
+- Umgekehrte Reihenfolge möglich: erst leere Lücke antippen (dicker Rahmen), dann Wort antippen → Wort wird eingesetzt. Erneutes Antippen der Lücke hebt die Auswahl auf. Reihenfolge Wort → Lücke funktioniert weiter.
+
+### Geändert
+- Hinweistext oben: „Wort und Lücke antippen – in beliebiger Reihenfolge.“
+
 ## Version 1.0 – 25.11.2026
 
 ### Neu
@@ -13,7 +21,10 @@
 - Prüfen: Fehlerzahl, falsche Lücken mit rotem Rand; ohne Fehler Teil des Lösungsworts (A größere Hälfte) mit Aufforderung zum Zusammensetzen; Übung zeigt das ganze Lösungswort.
 - „Neu starten“ mit Bestätigung durch zweites Antippen (3 Sekunden).
 - Versionsnummer und Datum am Seitenende.
+- „Prüfen“ wird aktiv, sobald 4 Wörter eingesetzt sind (Anzahl der eigenen Lücken); im Übungsmodus, sobald alle 8 Lücken gefüllt sind. Pflichtenheft Punkt 6 angepasst (bestätigt 27.11.2026).
+
+### Geändert
+- Datei heißt im Repository `index.html` statt `luecke_v1.0.html`; online unter https://henningschmidt1.github.io/lueckentext/?rolle=A (bzw. `B`, `solo`).
 
 ### Offen
-- „Prüfen“ wird aktiv, sobald 4 Wörter eingesetzt sind (Anzahl der eigenen Lücken), nicht erst nach allen 6 eigenen Wörtern – sonst wäre eine fehlerfreie Lösung unmöglich (Füllwörter müssten in Partnerlücken). Abweichung vom Pflichtenheft Punkt 6, bitte bestätigen.
-- Test auf echten Geräten und GitHub Pages steht aus.
+- Test auf echten Geräten (zwei Handys per QR-Code, Safari und Chrome, PC mit Maus) steht aus.
